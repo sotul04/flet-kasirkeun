@@ -378,7 +378,7 @@ class TransactionInterface(ft.Container):
     def coupon_on_click(self, _):
         self.containerCoupon.visible = not self.containerCoupon.visible
         if self.containerCoupon.visible:
-            self.bottomBar.height = 260
+            self.bottomBar.height = 250
             self.couponButton.text = "Tutup"
         else:
             self.bottomBar.height = 120

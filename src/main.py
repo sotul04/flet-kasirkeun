@@ -6,6 +6,7 @@ from models.Coupon import FreeCoupon, DiscountCoupon
 from models.Good import *
 from models.Transaction import Transaction, Triple
 from ui.transaction_ui import TransactionUI, GoodCart, GoodBox
+from ui.history import HistoryUI
 
 class MainPage:
 
@@ -18,6 +19,7 @@ class MainPage:
     page : ft.Page
 
     transaction = TransactionUI
+    history = HistoryUI
 
     def __init__(self, page: ft.Page) -> None:
         self.page = page
@@ -28,6 +30,7 @@ class MainPage:
 
     def __init_mainFrame(self):
         self.transaction = TransactionUI(self.page)
+        self.history = HistoryUI()
         self.__init_sideBar()
         self.__init_rightFrame()
         self.mainFrame = ft.Row(
@@ -51,6 +54,8 @@ class MainPage:
             self.rightFrame.update()
         else:
             print("Riwayat")
+            self.rightFrame.content = self.history
+            self.rightFrame.update()
 
     def on_theme_change(self, e):
         if e.control.value:
