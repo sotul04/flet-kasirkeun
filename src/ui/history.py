@@ -90,7 +90,7 @@ class TransactionDetail(ft.Container):
                 ft.Container(
                     content=ft.Text(f"Detail", size=40),
                     alignment=ft.alignment.center,
-                    margin=ft.Margin(0,10,0,0)
+                    margin=ft.Margin(0,10,0,10)
                 ),
                 ft.Container(
                     content=ft.Column(
