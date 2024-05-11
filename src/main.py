@@ -100,7 +100,7 @@ class MainPage:
         )
         
     def __init_logo(self):
-        self.logo = ft.Image(src=f"my-flet-app/assets/logo.png", width=170, height=80, fit=ft.ImageFit.CONTAIN)
+        self.logo = ft.Image(src=f"src/assets/logo.png", width=170, height=80, fit=ft.ImageFit.CONTAIN)
     
     def __init_rightFrame(self):
         self.rightFrame = ft.Container(expand=True)

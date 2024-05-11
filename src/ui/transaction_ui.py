@@ -256,7 +256,7 @@ class TransactionInterface(ft.Container):
                         content=ft.Row(
                             [
                                 # ft.icons.TROLLEY,
-                                ft.Image(src="my-flet-app/assets/trolley.png", width=70, height=70),
+                                ft.Image(src="src/assets/trolley.png", width=70, height=70),
                                 ft.Text(value="Keranjang", size=30),
                             ]
                         ),
@@ -268,10 +268,7 @@ class TransactionInterface(ft.Container):
         )
     
     def init_listItem(self):
-        kaus = Good(2, "Kaus Kaki Ronaldo", 56, 300000)
-        sumsang = Good(1, "sumsang s25 cross cross", 40, 30000000)
-
-        self.currentTrc = Transaction(0, None, None, [Triple(kaus, 1, 300000), Triple(sumsang, 1, 30000000)], 30300000, "", 0.0)
+        self.currentTrc = Transaction()
         self.freeItem = None
         self.freeItemElement = None
         self.listItem = ft.Column(
