@@ -87,7 +87,11 @@ class TransactionDetail(ft.Container):
                 self.couponDetails = ft.Text(f"Coupon: Kupon Diskon (ID: {self.transaction.get_couponDiscount})")
         self.content = ft.Column(
             [
-                ft.Text(f"Detail", size=40),
+                ft.Container(
+                    content=ft.Text(f"Detail", size=40),
+                    alignment=ft.alignment.center,
+                    margin=ft.Margin(0,10,0,0)
+                ),
                 ft.Container(
                     content=ft.Column(
                         [
