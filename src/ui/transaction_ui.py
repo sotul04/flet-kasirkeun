@@ -378,7 +378,7 @@ class TransactionInterface(ft.Container):
     def coupon_on_click(self, _):
         self.containerCoupon.visible = not self.containerCoupon.visible
         if self.containerCoupon.visible:
-            self.bottomBar.height = 250
+            self.bottomBar.height = 260
             self.couponButton.text = "Tutup"
         else:
             self.bottomBar.height = 120
@@ -511,6 +511,13 @@ class TransactionInterface(ft.Container):
         self.freeItem = None
         self. freeItemElement = None
         self.currentTrc = Transaction()
+        self.currentTrc.items = []
+        self.freeCoupon.value = ""
+        self.discountCoupon.value = ""
+        self.removeDiscountCoupon.visible = False
+        self.removeFreeCoupon.visible = False
+        self.submitDiscountCoupon.visible = True
+        self.submitFreeCoupon.visible = True
         self.update_all_transaction()
         dialog = DialogAlert(self.page ,info="Transaksi berhasil", title="Success")
         dialog.open_dlg()
@@ -527,10 +534,24 @@ class TransactionInterface(ft.Container):
         for item in self.currentTrc.items:
             for _ in range(item.get_second):
                 GoodController.cancelOneGood(item.get_first.get_idItem)
+        if self.freeItem != None:
+            for _ in range(self.freeItem.get_second):
+                GoodController.cancelOneGood(self.freeItem.get_first.get_idItem)
+
         self.currentTrc = Transaction()
+        self.currentTrc.items = []
+        self.freeCoupon.value = ""
+        self.discountCoupon.value = ""
+        self.removeDiscountCoupon.visible = False
+        self.removeFreeCoupon.visible = False
+        self.submitDiscountCoupon.visible = True
+        self.submitFreeCoupon.visible = True
         self.freeItem = None
         self.freeItemElement = None
         self.currentDiscount = None
+
+        print("Jumlah barang:", self.getTotalQuantity())
+
         self.update_all_transaction()
     
     def cancel_oneItem(self, item : Good):
