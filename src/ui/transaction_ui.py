@@ -23,11 +23,11 @@ class GoodBox(ft.Card):
 
     transactioninf : 'TransactionInterface'
 
-    def __init__(self, good : Good, trainf : 'TransactionInterface', page : ft.Page = None, type: int = FOR_TRANSACTION, expand = False, padding = 15):
+    def __init__(self, good : Good, trainf : 'TransactionInterface', page : ft.Page = None, type: int = FOR_TRANSACTION, expand = False):
         super().__init__(expand=expand)
         self.page = page
         self.transactioninf = trainf
-        self.height = 155
+        self.height = 140
         self.good = good
         self.__init_addButton()
         self.__init_editButton()
@@ -35,7 +35,6 @@ class GoodBox(ft.Card):
         self.stockLabel = ft.Text(value=f"Stok: {self.good.get_stock}")
         self.content = ft.Container(
             margin=10,
-            padding=padding,
             content=ft.Column(
                 [
                     ft.ListTile(
@@ -46,7 +45,7 @@ class GoodBox(ft.Card):
                             fit=ft.ImageFit.CONTAIN
                         ),
                         title=ft.Text(self.good.get_name),
-                        subtitle=ft.Text(f"Rp {self.good.get_price}")
+                        subtitle=ft.Text(f"Rp {self.good.get_price:,.1f}")
                     ),
                     ft.Row(
                         [
@@ -255,7 +254,6 @@ class TransactionInterface(ft.Container):
                     ft.Container(
                         content=ft.Row(
                             [
-                                # ft.icons.TROLLEY,
                                 ft.Image(src="src/assets/trolley.png", width=70, height=70),
                                 ft.Text(value="Keranjang", size=30),
                             ]
@@ -295,7 +293,7 @@ class TransactionInterface(ft.Container):
             on_click= lambda e: self.coupon_on_click(e)
         )
         self.summary = ft.ListTile(
-            title=ft.Text(f"Rp {self.currentTrc.get_totalPrice}", color=ft.colors.WHITE, size=30),
+            title=ft.Text(f"Rp {self.currentTrc.get_totalPrice:,.1f}", color=ft.colors.WHITE, size=30),
             subtitle=ft.Text(f"{self.getTotalQuantity()} Produk", color=ft.colors.WHITE),
             trailing=ft.ElevatedButton(
                 height=140,
@@ -438,7 +436,7 @@ class TransactionInterface(ft.Container):
         if self.currentDiscount != None:
             disc = self.currentTrc.get_totalPrice * self.currentDiscount.get_percentage
             self.currentTrc.discount = disc if disc <= self.currentDiscount.get_maxDiscount else self.currentDiscount.get_maxDiscount
-            self.discount.value = f" - Rp {self.currentTrc.get_discount}"
+            self.discount.value = f" - Rp {self.currentTrc.get_discount:,.1f}"
         self.update()
     
     def submitDiscountCoupon_onclick(self, _):
@@ -480,12 +478,12 @@ class TransactionInterface(ft.Container):
         self.listItem.controls = items
         if self.freeItemElement != None:
             self.listItem.controls.append(self.freeItemElement)
-        self.summary.title = ft.Text(f"Rp {self.currentTrc.get_totalPrice}", color=ft.colors.WHITE, size=30)
+        self.summary.title = ft.Text(f"Rp {self.currentTrc.get_totalPrice:,.1f}", color=ft.colors.WHITE, size=30)
         self.summary.subtitle=ft.Text(f"{self.getTotalQuantity()} Produk", color=ft.colors.WHITE)
         self.updateDiscount()
     
     def update_transaction(self):
-        self.summary.title = ft.Text(f"Rp {self.currentTrc.get_totalPrice}", color=ft.colors.WHITE, size=30)
+        self.summary.title = ft.Text(f"Rp {self.currentTrc.get_totalPrice:,.1f}", color=ft.colors.WHITE, size=30)
         self.summary.subtitle=ft.Text(f"{self.getTotalQuantity()} Produk", color=ft.colors.WHITE)
         self.updateDiscount()
 
@@ -575,18 +573,17 @@ class GoodCart(ft.Card):
 
     page : ft.Page
 
-    def __init__(self, good : Triple, parents : TransactionInterface, page : ft.Page = None, isFree : bool = False, expand = False, padding = 15):
+    def __init__(self, good : Triple, parents : TransactionInterface, page : ft.Page = None, isFree : bool = False, expand = False):
         super().__init__(expand=expand)
         self.father = parents
         self.page = page
-        self.height = 120
+        self.height = 100
         self.good = good
         self.__init_addButton()
         self.__init_subButton()
         self.__init_quantityLabel()
         self.content = ft.Container(
             margin=10,
-            padding=padding,
             content=ft.Row(
                 [
                     ft.ListTile(
@@ -597,7 +594,7 @@ class GoodCart(ft.Card):
                             fit=ft.ImageFit.CONTAIN
                         ),
                         title=ft.Text(self.good.get_first.get_name),
-                        subtitle=ft.Text(f"Rp {self.good.get_third}"),
+                        subtitle=ft.Text(f"Rp {self.good.get_third:,.1f}"),
                         width=300,
                     ),
                     ft.Container(

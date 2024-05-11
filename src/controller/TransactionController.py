@@ -19,17 +19,17 @@ class TransactionController:
 
     @staticmethod
     def getSoldGoods(id : int) -> List[Triple]:
-        result = cursor.execute(f"SELECT * FROM sold_goods NATURAL JOIN goods WHERE id_transaction={id}")
+        result = cursor.execute(f"SELECT * FROM sold_goods LEFT NATURAL JOIN goods WHERE id_transaction={id}")
         rows = result.fetchall()
         items = []
         for row in rows:
             items.append(Triple(
                 Good(
-                    int(row[1]),
-                    row[4],
-                    int(row[5]),
-                    float(row[6]),
-                    row[7]
+                    0 if row[1] == None else int(row[1]),
+                    None if row[4] == None else row[4],
+                    0 if row[5] == None else int(row[5]),
+                    0.0 if row[6] == None else float(row[6]),
+                    Good.image_default if row[7] == None else row[7]
                 ),
                 int(row[2]),
                 float(row[3])

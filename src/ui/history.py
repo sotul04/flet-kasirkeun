@@ -12,7 +12,7 @@ class HistoryCard(ft.Card):
     def __init__(self, transaction : Transaction, father : 'HistoryUI' = None):
         super().__init__()
         self.father = father
-        self.height = 100
+        self.height = 90
         self.transaction = transaction
         self.content = ft.Container(
             content=ft.ListTile(
@@ -22,8 +22,10 @@ class HistoryCard(ft.Card):
                 ),
                 title=ft.Text(f"Nomor Transaksi: {self.transaction.get_idTransaction}"),
                 subtitle=ft.Text(f"{self.transaction.get_datetime}"),
-                trailing=ft.Text(f"Rp {self.transaction.get_totalPrice}")
-            )
+                trailing=ft.Text(f"Rp {self.transaction.get_totalPrice:,.1f}", size=16)
+            ),
+            ink=True,
+            on_click= lambda e: self.button_onclick(e)
         )
     
     def button_onclick(self, _):
@@ -36,14 +38,16 @@ class DetailGoods(ft.Card):
 
     quantityLabel : ft.Text
 
-    def __init__(self, good : Triple, padding = 15):
+    nameGood : ft.Text
+
+    def __init__(self, good : Triple):
         super().__init__()
-        self.height = 120
+        self.height = 100
         self.good = good
+        self.nameGood = ft.Text(self.good.get_first.get_name)
         self.__init_quantityLabel()
         self.content = ft.Container(
             margin=10,
-            padding=padding,
             content= ft.ListTile(
                 leading=ft.Image(
                     src_base64=self.good.get_first.get_imgSource if self.good.get_first.get_imgSource != "" else Good.image_default,
@@ -51,11 +55,14 @@ class DetailGoods(ft.Card):
                     height=60,
                     fit=ft.ImageFit.CONTAIN
                 ),
-                title=ft.Text(self.good.get_first.get_name),
-                subtitle=ft.Text(f"Rp {self.good.get_third}"),
-                trailing=ft.Text(f"{self.good.get_second}")
+                title=self.nameGood,
+                subtitle=ft.Text(f"Rp {self.good.get_third:,.1f}"),
+                trailing=ft.Text(f"{self.good.get_second}", size=20)
             ),
         )
+        if self.good.get_first.get_name == None:
+            self.nameGood.value = "Unidentified Good"
+            self.nameGood.color = ft.colors.RED
     
     def __init_quantityLabel(self):
         self.quantityLabel = ft.Text(str(self.good.get_second))
@@ -73,11 +80,11 @@ class TransactionDetail(ft.Container):
             self.couponDetails = ft.Text("Tidak ada kupon yang digunakan")
         else:
             if self.transaction.get_couponFree != None and self.transaction.get_couponDiscount != None:
-                self.couponDetails = ft.Text(f"Coupon: {self.transaction.get_couponFree} (Kupon Gratis), {self.transaction.get_couponDiscount} (Kupon Diskon)")
+                self.couponDetails = ft.Text(f"Coupon: Kupon Gratis (ID: {self.transaction.get_couponFree}), Kupon Diskon (ID: {self.transaction.get_couponDiscount})")
             elif self.transaction.get_couponFree != None:
-                self.couponDetails = ft.Text(f"Coupon: {self.transaction.get_couponFree} (Kupon Gratis)")
+                self.couponDetails = ft.Text(f"Coupon: Kupon Gratis (ID: {self.transaction.get_couponFree})")
             else:
-                self.couponDetails = ft.Text(f"Coupon: {self.transaction.get_couponDiscount} (Kupon Diskon)")
+                self.couponDetails = ft.Text(f"Coupon: Kupon Diskon (ID: {self.transaction.get_couponDiscount})")
         self.content = ft.Column(
             [
                 ft.Text(f"Detail", size=40),
@@ -92,22 +99,25 @@ class TransactionDetail(ft.Container):
                     expand=True,
                 ),
                 ft.Container(
-                    width=300,
                     content=ft.Column(
                         [
-                            ft.Column(
-                                [
-                                    ft.Text(f"Nomor Transaksi: {self.transaction.get_idTransaction}"),
-                                    ft.Text(f"Waktu: {self.transaction.get_datetime}"),
-                                ],
-                                alignment=ft.MainAxisAlignment.END,
+                            ft.Container(
+                                content=ft.Column(
+                                    [
+                                        ft.Text(f"Nomor Transaksi: {self.transaction.get_idTransaction}"),
+                                        ft.Text(f"Waktu: {self.transaction.get_datetime}"),
+                                    ],
+                                    alignment=ft.MainAxisAlignment.END,
+                                ),
+                                alignment=ft.alignment.Alignment(1,0),
                             ),
+                            ft.Divider(thickness=2),
                             ft.Column(
                                 [
                                     self.couponDetails,
                                     ft.Text(f"{self.getTotalItem()} Produk"),
-                                    ft.Text(f"Rp {self.transaction.get_totalPrice}"),
-                                    ft.Text(f"Diskon -Rp {self.transaction.get_discount}", color=ft.colors.GREEN),
+                                    ft.Text(f"Rp {self.transaction.get_totalPrice:,.1f}"),
+                                    ft.Text(f"Diskon: Rp {self.transaction.get_discount:,.1f}", color=ft.colors.GREEN),
                                 ],
                                 alignment=ft.MainAxisAlignment.START
                             )
@@ -187,7 +197,8 @@ class HistoryUI(ft.Container):
     def init_emptyBox(self):
         self.emptyBox = ft.Container(
             expand=True,
-            content=ft.Text("Tidak ada transaksi dipilih", size=40, color=ft.colors.GREY),
+            content=ft.Text("Tidak ada transaksi dipilih", size=30, color=ft.colors.GREY),
+            alignment=ft.alignment.center
         )
     
     def init_search(self):
@@ -195,7 +206,7 @@ class HistoryUI(ft.Container):
             padding=ft.Padding(37.5,0,37.5,0),
             content=ft.TextField(
                 label="Search",
-                height=60,
+                height=70,
                 border_radius=30,
                 on_change= lambda e: self.onchange_filter(e)
             )
@@ -211,7 +222,10 @@ class HistoryUI(ft.Container):
                 ft.dropdown.Option("Harga Total - Descending"),
             ],
             width=250,
+            height=50,
             on_change= lambda e: self.onchange_filter(e),
+            text_size=12,
+            icon_size=20,
             border_radius=30,
         )
 
