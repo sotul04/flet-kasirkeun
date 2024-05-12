@@ -106,7 +106,7 @@ class CouponController:
 
     @staticmethod
     def addFreeCoupon(coupon : FreeCoupon):
-        code = CouponController.generateCouponCode()
+        code = coupon.get_code
         while CouponController.isCodeAlreadyUsed(code):
             code = CouponController.generateCouponCode()
         cursor.execute(f"INSERT INTO coupon(code,type) VALUES ('{code}', 'free_coupon')")
@@ -118,7 +118,7 @@ class CouponController:
     
     @staticmethod
     def addDiscountCoupon(coupon : DiscountCoupon):
-        code = CouponController.generateCouponCode()
+        code = coupon.get_code
         while CouponController.isCodeAlreadyUsed(code):
             code = CouponController.generateCouponCode()
         cursor.execute(f"INSERT INTO coupon(code,type) VALUES ('{code}', 'discount_coupon')")
