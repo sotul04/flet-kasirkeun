@@ -548,8 +548,6 @@ class TransactionInterface(ft.Container):
         self.freeItemElement = None
         self.currentDiscount = None
 
-        print("Jumlah barang:", self.getTotalQuantity())
-
         self.update_all_transaction()
     
     def cancel_oneItem(self, item : Good):

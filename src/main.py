@@ -7,6 +7,7 @@ from models.Good import *
 from models.Transaction import Transaction, Triple
 from ui.transaction_ui import TransactionUI, GoodCart, GoodBox
 from ui.history import HistoryUI
+from ui.management import ManagementUI
 
 class MainPage:
 
@@ -20,6 +21,7 @@ class MainPage:
 
     transaction = TransactionUI
     history = HistoryUI
+    management = ManagementUI
 
     def __init__(self, page: ft.Page) -> None:
         self.page = page
@@ -31,6 +33,8 @@ class MainPage:
     def __init_mainFrame(self):
         self.transaction = TransactionUI(self.page)
         self.history = HistoryUI()
+        self.management = ManagementUI(self.page)
+        self.page.floating_action_button.visible = False
         self.__init_sideBar()
         self.__init_rightFrame()
         self.mainFrame = ft.Row(
@@ -46,16 +50,21 @@ class MainPage:
         if e.control.selected_index == 0:
             print("Transaksi")
             self.rightFrame.content = self.transaction
+            self.page.floating_action_button.visible = False
             self.rightFrame.update()
+            self.page.update()
         elif e.control.selected_index == 1:
             print("Manajemen")
-            trip = Triple(Good(123,"Anjing",9,9,""), 2, 18)
-            self.rightFrame.content = GoodCart(trip)
+            self.page.floating_action_button.visible = True
+            self.rightFrame.content = self.management
             self.rightFrame.update()
+            self.page.update()
         else:
             print("Riwayat")
             self.rightFrame.content = self.history
+            self.page.floating_action_button.visible = False
             self.rightFrame.update()
+            self.page.update()
 
     def on_theme_change(self, e):
         if e.control.value:

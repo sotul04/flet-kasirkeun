@@ -12,6 +12,8 @@ class GoodEditor(ft.AlertDialog):
 
     page : ft.Page
 
+    father : any
+
     good : Good
 
     nameField : ft.TextField
@@ -24,10 +26,11 @@ class GoodEditor(ft.AlertDialog):
 
     frame : ft.Container
 
-    def __init__(self, page : ft.Page, good : Good = None):
+    def __init__(self, page : ft.Page, father : any, good : Good = None):
         super().__init__()
         self.good = good
         self.page = page
+        self.father = father
         if good:
             self.init_edit()
         else:
@@ -79,7 +82,6 @@ class GoodEditor(ft.AlertDialog):
         self.nameField = ft.TextField(
             label="Nama Produk",
             max_length=255,
-            # height=60,
             border_radius=30,
         )
         self.priceField = ft.TextField(
@@ -235,6 +237,8 @@ class GoodEditor(ft.AlertDialog):
         if name and price and stock:
             GoodController.setEditedGood(Good(self.good.get_idItem, name, stock, price, self.imageField.content.src_base64))
             self.close_editor()
+            self.father.refresh_view()
+            self.father.father.update_interface()
     
     def save_add(self):
         name = self.nameField.value if (self.nameField.value != None and not isStringEmpty(self.nameField.value)) else None
@@ -243,6 +247,7 @@ class GoodEditor(ft.AlertDialog):
         if name and price and stock:
             GoodController.addItem(Good(0, name, stock, price, self.imageField.content.src_base64))
             self.close_editor()
+            self.father.update_interface()
     
 
 class DiscountCouponEditor(ft.AlertDialog):

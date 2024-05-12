@@ -1,78 +1,36 @@
-# 
-
-# import flet as ft
-
-# def main(page):
-#     page.title = "Card Example"
-#     page.add(
-#         ft.Card(
-#             content=ft.Container(
-#                 content=ft.Column(
-#                     [
-#                         ft.ListTile(
-#                             leading=ft.Icon(ft.icons.ALBUM),
-#                             title=ft.Text("The Enchanted Nightingale"),
-#                             subtitle=ft.Text(
-#                                 "Music by Julie Gable. Lyrics by Sidney Stein."
-#                             ),
-#                         ),
-#                         ft.Row(
-#                             [ft.TextButton("Buy tickets"), ft.TextButton("Listen")],
-#                             alignment=ft.MainAxisAlignment.END,
-#                         ),
-#                     ]
-#                 ),
-#                 width=400,
-#                 padding=10,
-#             )
-#         )
-#     )
-
-# ft.app(target=main)
-
-
 import flet as ft
 
-from ui.editor import GoodEditor, DiscountCouponEditor, FreeCouponEditor
-from models.Good import Good
-from models.Coupon import DiscountCoupon, FreeCoupon
-
 def main(page: ft.Page):
-
+    page.title = "Floating Action Button"
     page.theme_mode = ft.ThemeMode.LIGHT
-
-    def show(_):
-        editor = GoodEditor(page)
-        editor.show_editor()
-    
-    def show2(_):
-        editor = FreeCouponEditor(page, FreeCoupon(51, "FREEDOM", 9, 3, 8, 2))
-        editor.show_editor()
-
-    page.add(
-        ft.ElevatedButton(text="Press", on_click=show),
-        ft.ElevatedButton(text="Discount", on_click=show2)
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.auto_scroll = True
+    page.scroll = ft.ScrollMode.HIDDEN
+    page.appbar = ft.AppBar(
+        title=ft.Text(
+            "Floating Action Button", weight=ft.FontWeight.BOLD, color=ft.colors.BLACK87
+        ),
+        bgcolor=ft.colors.BLUE,
+        center_title=True,
+        actions=[
+            ft.IconButton(ft.icons.MENU, tooltip="Menu", icon_color=ft.colors.BLACK87)
+        ],
+        color=ft.colors.WHITE,
     )
 
+    # keeps track of the number of tiles already added
+    page.count = 0
+
+    def fab_pressed(e):
+        page.add(ft.ListTile(title=ft.Text(f"Tile {page.count}")))
+        page.show_snack_bar(
+            ft.SnackBar(ft.Text("Tile was added successfully!"), open=True)
+        )
+        page.count += 1
+
+    page.floating_action_button = ft.FloatingActionButton(
+        icon=ft.icons.ADD, on_click=fab_pressed, bgcolor=ft.colors.LIME_300
+    )
+    page.add(ft.Text("Press the FAB to add a tile!"))
 
 ft.app(target=main)
-
-# import flet as ft
-
-# def main(page: ft.Page):
-#     def dropdown_changed(e):
-#         t.value = f"Dropdown changed to {dd.value}"
-#         print(e.control.value)
-#         page.update()
-
-#     t = ft.Text()
-#     dd = ft.Dropdown(
-#         on_change=dropdown_changed,
-#         options=[
-#             ft.dropdown.Option(f"Nomor: {i+1}", "Anjing") for i in range (100)
-#         ],
-#         width=200,
-#     )
-#     page.add(dd, t)
-
-# ft.app(target=main)
