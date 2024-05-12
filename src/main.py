@@ -52,6 +52,7 @@ class MainPage:
             self.rightFrame.content = self.transaction
             self.page.floating_action_button.visible = False
             self.rightFrame.update()
+            self.transaction.left.update_interface()
             self.page.update()
         elif e.control.selected_index == 1:
             print("Manajemen")
@@ -65,6 +66,7 @@ class MainPage:
             self.page.floating_action_button.visible = False
             self.rightFrame.update()
             self.page.update()
+            self.history.onchange_filter(None)
 
     def on_theme_change(self, e):
         if e.control.value:

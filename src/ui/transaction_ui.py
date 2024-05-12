@@ -93,9 +93,11 @@ class GoodBox(ft.Card):
     
     def add_onclick(self, e):
         if GoodController.sellOneGood(self.good.get_idItem):
-            self.good.set_stock = self.good.get_stock - 1
-            self.stockLabel.value = self.good.get_stock
+            self.good = GoodController.getItem(self.good.get_idItem)
+            self.stockLabel.value = f"Stok: {self.good.get_stock}"
             self.transactioninf.add_item_outside(Triple(self.good, 1, self.good.get_price))
+            if self.good.get_stock == 0:
+                self.addButton.disabled = True
             self.update()
 
 class GoodInterface(ft.Container):
