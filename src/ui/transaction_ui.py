@@ -211,7 +211,7 @@ class TransactionUI(ft.Container):
         self.left = GoodInterface(self.page, self.right)
 
     def __init_right(self):
-        self.right = TransactionInterface(self.page)
+        self.right = TransactionInterface(self.page, self)
 
 class TransactionInterface(ft.Container):
     
@@ -240,10 +240,13 @@ class TransactionInterface(ft.Container):
 
     page : ft.Page
 
-    def __init__(self, page : ft.Page):
+    father : TransactionUI
+
+    def __init__(self, page : ft.Page, father : TransactionUI):
         super().__init__()
         self.currentDiscount = None
         self.page = page
+        self.father = father
         self.expand = True
         self.init_mainFrame()
         self.content = self.frame
@@ -262,7 +265,7 @@ class TransactionInterface(ft.Container):
                         ),
                         expand=True,
                     ),
-                    ft.ElevatedButton("Kosongkan", width=120, height=45, color=ft.colors.RED, bgcolor=ft.colors.RED_100, on_click= lambda e: self.empty_cart_onclick(e))
+                    ft.ElevatedButton("Kosongkan", width=120, height=45, color=ft.colors.RED, bgcolor=ft.colors.RED_100, on_click= lambda _: self.empty_cart_onclick())
                 ]
             )
         )
@@ -525,18 +528,20 @@ class TransactionInterface(ft.Container):
     def add_item(self, item : Triple):
         self.currentTrc.addItem(item)
         self.update_transaction()
+        self.father.left.update_interface()
     
     def add_item_outside(self, item : Triple):
         self.currentTrc.addItem(item)
         self.update_all_transaction()
     
-    def empty_cart_onclick(self, _):
+    def empty_cart_onclick(self):
         for item in self.currentTrc.items:
             for _ in range(item.get_second):
                 GoodController.cancelOneGood(item.get_first.get_idItem)
         if self.freeItem != None:
             for _ in range(self.freeItem.get_second):
                 GoodController.cancelOneGood(self.freeItem.get_first.get_idItem)
+        self.father.left.update_interface()
 
         self.currentTrc = Transaction()
         self.currentTrc.items = []
@@ -559,6 +564,7 @@ class TransactionInterface(ft.Container):
                 self.update_all_transaction()
             else:
                 self.update_transaction()
+        self.father.left.update_interface()
 
 class GoodCart(ft.Card):
     
@@ -642,11 +648,11 @@ class GoodCart(ft.Card):
         self.update()
     
     def sub_onclick(self, _):
-        self.father.cancel_oneItem(self.good.get_first)
         GoodController.cancelOneGood(self.good.get_first.get_idItem)
         self.good.set_second = self.good.get_second - 1
         self.quantityLabel.value = str(self.good.get_second)
         self.good.set_third = self.good.get_third - self.good.get_first.get_price
+        self.father.cancel_oneItem(self.good.get_first)
         if (self.good.set_second > 0):
             self.update()
         

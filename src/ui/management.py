@@ -268,7 +268,7 @@ class GoodManager(ft.Container):
         self.itemField.update()
     
     def update_interface(self):
-        self.listItem = GoodController.getSomeGoods("")
+        self.listItem = GoodController.getSomeGoods(self.searchField.content.value)
         children = [GoodBox(good, self) for good in self.listItem]
         self.itemField.controls = children
         if len(self.listItem) == 0:

@@ -8,6 +8,7 @@ from models.Transaction import Transaction, Triple
 from ui.transaction_ui import TransactionUI, GoodCart, GoodBox
 from ui.history import HistoryUI
 from ui.management import ManagementUI
+import atexit
 
 class MainPage:
 
@@ -29,6 +30,7 @@ class MainPage:
         self.__init_mainFrame()
         self.page.add(self.mainFrame)
         self.page.update()
+        atexit.register(self.transaction.right.empty_cart_onclick)
 
     def __init_mainFrame(self):
         self.transaction = TransactionUI(self.page)
