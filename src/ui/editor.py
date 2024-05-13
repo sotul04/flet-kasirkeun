@@ -633,7 +633,7 @@ class FreeCouponEditor(ft.AlertDialog):
                                 alignment=ft.MainAxisAlignment.CENTER,
                             ),
                         ),
-                        height=260,
+                        height=280,
                     ),
                     ft.Row(
                         [

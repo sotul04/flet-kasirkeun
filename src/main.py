@@ -67,6 +67,7 @@ class MainPage:
             self.rightFrame.update()
             self.page.update()
             self.history.onchange_filter(None)
+            self.history.deselect()
 
     def on_theme_change(self, e):
         if e.control.value:

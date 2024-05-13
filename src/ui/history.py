@@ -254,5 +254,9 @@ class HistoryUI(ft.Container):
     def change_details(self, item : Transaction):
         self.rightPanel.content = TransactionDetail(item)
         self.rightPanel.update()
+    
+    def deselect(self):
+        self.rightPanel.content = self.emptyBox
+        self.rightPanel.update()
 
 

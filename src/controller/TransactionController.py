@@ -41,7 +41,6 @@ class TransactionController:
         item = TransactionController.getSoldGoods(id)
         result = cursor.execute(f"SELECT * FROM transactions WHERE id_transaction={id}")
         row = result.fetchone()
-        print(row)
         return Transaction(
             idTransaction= int(row[0]),
             couponFree= None if row[1] == None else int(row[1]),
