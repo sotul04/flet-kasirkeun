@@ -30,7 +30,7 @@ class GoodBox(ft.Card):
                             height=60,
                             fit=ft.ImageFit.CONTAIN
                         ),
-                        title=ft.Text(self.good.get_name),
+                        title=ft.Text(self.good.get_name, weight=ft.FontWeight.BOLD),
                         subtitle=ft.Text(f"Rp {self.good.get_price:,.1f}")
                     ),
                     ft.Row(
@@ -310,7 +310,7 @@ class CouponBox(ft.Card):
                 leading= ft.FloatingActionButton(
                     icon=ft.icons.CABLE
                 ),
-                title=ft.Text(f"ID Kupon: {self.coupon.get_idCoupon}"),
+                title=ft.Text(f"ID Kupon: {self.coupon.get_idCoupon}", weight=ft.FontWeight.BOLD),
                 subtitle=ft.Text(f"{"Kupon Gratis" if isinstance(self.coupon, FreeCoupon) else "Kupon Diskon"}"),
                 trailing=ft.Text(f"{self.coupon.get_code}")
             ),

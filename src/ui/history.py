@@ -20,7 +20,7 @@ class HistoryCard(ft.Card):
                     icon=ft.icons.SHOPPING_BASKET,
                     on_click= lambda e: self.button_onclick(e)
                 ),
-                title=ft.Text(f"Nomor Transaksi: {self.transaction.get_idTransaction}"),
+                title=ft.Text(f"Nomor Transaksi: {self.transaction.get_idTransaction}", weight=ft.FontWeight.BOLD),
                 subtitle=ft.Text(f"{self.transaction.get_datetime}"),
                 trailing=ft.Text(f"Rp {self.transaction.get_totalPrice:,.1f}", size=16)
             ),
@@ -44,7 +44,7 @@ class DetailGoods(ft.Card):
         super().__init__()
         self.height = 100
         self.good = good
-        self.nameGood = ft.Text(self.good.get_first.get_name)
+        self.nameGood = ft.Text(self.good.get_first.get_name, weight=ft.FontWeight.BOLD)
         self.__init_quantityLabel()
         self.content = ft.Container(
             margin=10,

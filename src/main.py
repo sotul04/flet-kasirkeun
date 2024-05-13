@@ -56,6 +56,7 @@ class MainPage:
             self.rightFrame.update()
             self.page.update()
             if self.management.isCoupon:
+                self.management.couponManager.deselect_item()
                 self.management.couponManager.update_interface()
             else:
                 self.management.goodManager.update_interface()

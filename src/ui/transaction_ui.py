@@ -41,7 +41,7 @@ class GoodBox(ft.Card):
                             height=60,
                             fit=ft.ImageFit.CONTAIN
                         ),
-                        title=ft.Text(self.good.get_name),
+                        title=ft.Text(self.good.get_name, weight=ft.FontWeight.BOLD),
                         subtitle=ft.Text(f"Rp {self.good.get_price:,.1f}")
                     ),
                     ft.Row(
@@ -295,7 +295,7 @@ class TransactionInterface(ft.Container):
             on_click= lambda e: self.coupon_on_click(e)
         )
         self.summary = ft.ListTile(
-            title=ft.Text(f"Rp {self.currentTrc.get_totalPrice:,.1f}", color=ft.colors.WHITE, size=30),
+            title=ft.Text(f"Rp {self.currentTrc.get_totalPrice:,.1f}", color=ft.colors.WHITE, size=30, weight=ft.FontWeight.BOLD),
             subtitle=ft.Text(f"{self.getTotalQuantity()} Produk", color=ft.colors.WHITE),
             trailing=ft.ElevatedButton(
                 height=140,
@@ -423,10 +423,11 @@ class TransactionInterface(ft.Container):
         self.update_all_transaction()
     
     def removeDiscountCoupon_onclick(self, _):
-        self.removeDiscount()
         self.discountCoupon.value = ""
+        self.discount.value = ""
         self.submitDiscountCoupon.visible = True
         self.removeDiscountCoupon.visible = False
+        self.removeDiscount()
     
     def removeDiscount(self):
         self.currentTrc.discount = 0
@@ -596,7 +597,7 @@ class GoodCart(ft.Card):
                             height=60,
                             fit=ft.ImageFit.CONTAIN
                         ),
-                        title=ft.Text(self.good.get_first.get_name),
+                        title=ft.Text(self.good.get_first.get_name, weight=ft.FontWeight.BOLD),
                         subtitle=ft.Text(f"Rp {self.good.get_third:,.1f}"),
                         width=300,
                     ),
@@ -605,7 +606,7 @@ class GoodCart(ft.Card):
                             [
                                 self.subButton,
                                 self.quantityLabel,
-                                self.addButton
+                                self.addButton,
                             ],
                             alignment=ft.MainAxisAlignment.END,
                         ),
@@ -619,6 +620,8 @@ class GoodCart(ft.Card):
             self.subButton.visible = False
             self.addButton.visible = False
             self.content.bgcolor = ft.colors.GREEN_300
+            self.quantityLabel.value = f"{self.good.get_second}   "
+            self.quantityLabel.size = 18
             self.content.border_radius = 10
     
     def __init_addButton(self):
