@@ -1,11 +1,6 @@
 import flet as ft
-from controller.CouponController import CouponController
-from controller.GoodController import GoodController
-from controller.TransactionController import TransactionController
-from models.Coupon import FreeCoupon, DiscountCoupon
 from models.Good import *
-from models.Transaction import Transaction, Triple
-from ui.transaction_ui import TransactionUI, GoodCart, GoodBox
+from ui.transaction_ui import TransactionUI
 from ui.history import HistoryUI
 from ui.management import ManagementUI
 import atexit
