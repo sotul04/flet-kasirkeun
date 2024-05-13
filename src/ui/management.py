@@ -673,7 +673,7 @@ class CouponManager(ft.Container):
     def add_freecoupon(self):
         listGoods = GoodController.getAll()
         if len(listGoods) == 0:
-            DialogAlert(self.page, "Tidak dapat menambah kupon gratis untuk saat ini\nSilahkan berpindah ke manajemen produk untuk menambah produk", "List Produk masih kosong")
+            DialogAlert(self.page, "Tidak dapat menambah kupon gratis untuk saat ini\nSilahkan berpindah ke manajemen produk untuk menambah produk", "List Produk masih kosong").open_dlg()
         FreeCouponEditor(self.page, self).show_editor()
     
     def add_discountcoupon(self):
