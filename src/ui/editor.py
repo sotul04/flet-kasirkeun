@@ -263,10 +263,13 @@ class DiscountCouponEditor(ft.AlertDialog):
 
     frame : ft.Container
 
-    def __init__(self, page : ft.Page, coupon : DiscountCoupon = None):
+    father : any
+
+    def __init__(self, page : ft.Page, father : any, coupon : DiscountCoupon = None):
         super().__init__()
         self.page = page
         self.coupon = coupon
+        self.father = father
         if coupon:
             self.init_edit()
         else:
@@ -385,6 +388,8 @@ class DiscountCouponEditor(ft.AlertDialog):
         if minbuy and percent and maxDisc and percentValid:
             CouponController.setEditedDiscountCoupon(DiscountCoupon(self.coupon.get_idCoupon,self.coupon.get_code,minbuy, percent, maxDisc))
             self.close_editor()
+            self.father.refresh_view()
+            self.father.father.update_interface()
         
     def save_change_add(self):
         notused = self.check_code()
@@ -396,6 +401,7 @@ class DiscountCouponEditor(ft.AlertDialog):
         if notused and code and minbuy and percent and maxDisc and percentValid:
             CouponController.addDiscountCoupon(DiscountCoupon(0,self.codeField.value,minbuy, percent, maxDisc))
             self.close_editor()
+            self.father.update_interface()
     
     def init_add(self):
         self.init_component_add()
@@ -417,7 +423,7 @@ class DiscountCouponEditor(ft.AlertDialog):
                                 alignment=ft.MainAxisAlignment.CENTER,
                             ),
                         ),
-                        height=320,
+                        height=340,
                     ),
                     ft.Row(
                         [
@@ -462,7 +468,7 @@ class DiscountCouponEditor(ft.AlertDialog):
                         [
                             ft.ElevatedButton(
                                 text="Simpan",
-                                on_click= lambda _: self.save_change_add()
+                                on_click= lambda _: self.save_change_edit()
                             ),
                             ft.ElevatedButton(
                                 text="Batal",
@@ -493,10 +499,13 @@ class FreeCouponEditor(ft.AlertDialog):
 
     frame : ft.Container
 
-    def __init__(self, page : ft.Page, coupon : FreeCoupon = None):
+    father : any
+
+    def __init__(self, page : ft.Page, father : any, coupon : FreeCoupon = None):
         super().__init__()
         self.page = page
         self.coupon = coupon
+        self.father = father
         if coupon:
             self.init_edit()
         else:
@@ -707,6 +716,7 @@ class FreeCouponEditor(ft.AlertDialog):
         if notused and code:
             CouponController.addFreeCoupon(FreeCoupon(0,code,iditem, nitem, idfree, nfree))
             self.close_editor()
+            self.father.update_interface()
     
     def save_change_edit(self):
         iditem = int(self.itemField.value)
@@ -715,3 +725,5 @@ class FreeCouponEditor(ft.AlertDialog):
         nfree = 0 if (self.freeCount.value == None or self.freeCount.value == "") else int(self.freeCount.value)
         CouponController.setEditedFreeCoupon(FreeCoupon(self.coupon.get_idCoupon, self.coupon.get_code, iditem, nitem, idfree, nfree))
         self.close_editor()
+        self.father.refresh_view()
+        self.father.father.update_interface()

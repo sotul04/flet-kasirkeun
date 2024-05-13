@@ -1,10 +1,11 @@
 from typing import List
 import flet as ft
 from models.Good import Good
-from models.Coupon import FreeCoupon, DiscountCoupon
+from models.Coupon import FreeCoupon, DiscountCoupon, Coupon
 from controller.CouponController import CouponController
 from controller.GoodController import GoodController
 from ui.editor import *
+from ui.alert import DialogAlert
 
 class GoodBox(ft.Card):
     
@@ -123,7 +124,7 @@ class GoodView(ft.Container):
                                                         read_only=True,
                                                     ),
                                                 ],
-                                                ft.MainAxisAlignment.CENTER,
+                                                alignment=ft.MainAxisAlignment.CENTER,
                                                 width=200,
                                             )
                                         ],
@@ -276,7 +277,6 @@ class GoodManager(ft.Container):
                 content=ft.Text("Tidak ada barang", size=16),
                 padding=ft.Padding(0,40,0,0)
             )]
-        print("herrrrreee")
         self.itemField.update()
     
     def deselect_item(self):
@@ -290,6 +290,394 @@ class GoodManager(ft.Container):
     def add_item(self):
         GoodEditor(self.page, self).show_editor()
 
+class CouponBox(ft.Card):
+
+    coupon : FreeCoupon | DiscountCoupon
+
+    father : 'CouponManager'
+
+    def __init__(self, coupon : FreeCoupon | DiscountCoupon, father : 'CouponManager'):
+        super().__init__()
+        self.coupon = coupon
+        self.father = father
+        self.height = 100
+        self.init_view()
+
+    def init_view(self):
+        self.content = ft.Container(
+            margin=10,
+            content=ft.ListTile(
+                leading= ft.FloatingActionButton(
+                    icon=ft.icons.CABLE
+                ),
+                title=ft.Text(f"ID Kupon: {self.coupon.get_idCoupon}"),
+                subtitle=ft.Text(f"{"Kupon Gratis" if isinstance(self.coupon, FreeCoupon) else "Kupon Diskon"}"),
+                trailing=ft.Text(f"{self.coupon.get_code}")
+            ),
+            ink=True,
+            on_click= lambda _: self.onclick_container()
+        )
+    
+    def onclick_container(self):
+        self.father.select_item(self.coupon)
+
+class CouponView(ft.Container):
+
+    coupon : FreeCoupon | DiscountCoupon
+
+    page : ft.Page
+    frame : ft.Container
+    father : 'GoodManager'
+
+    def __init__(self, coupon : FreeCoupon | DiscountCoupon, page : ft.Page, father : 'GoodManager'):
+        super().__init__()
+        self.coupon = coupon
+        self.page = page
+        self.father = father
+        if isinstance(self.coupon, FreeCoupon):
+            self.init_view_freecoupon()
+        else:
+            self.init_view_discountcoupon()
+    
+    def init_view_freecoupon(self):
+        self.frame = ft.Container(
+            expand=True,
+            content=ft.Row(
+                [
+                    ft.Column(
+                        [
+                            ft.Card(
+                                width=500,
+                                content=ft.Container(
+                                    padding=10,
+                                    content=ft.Column(
+                                        [
+                                            ft.TextField(
+                                                label="ID Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_idCoupon,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Jenis Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=f"Kupon Gratis",
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Kode Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_code,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Produk yang harus dibeli",
+                                                height=60,
+                                                border_radius=30,
+                                                value=GoodController.getItem(self.coupon.get_idItem).get_name,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Jumlah produk minimal",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_nItem,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Produk gratis",
+                                                height=60,
+                                                border_radius=30,
+                                                value=GoodController.getItem(self.coupon.get_idFree).get_name,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Jumlah produk gratis",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_nFree,
+                                                read_only=True,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        width=300,
+                                    )
+                                )
+                            ),
+                            ft.Row(
+                                [
+                                    ft.Container(width=5),
+                                    ft.ElevatedButton(
+                                        text="Edit",
+                                        on_click= lambda _: self.edit_onclick()
+                                    ),
+                                    ft.ElevatedButton(
+                                        text="Hapus",
+                                        bgcolor=ft.colors.RED_200,
+                                        color=ft.colors.RED,
+                                        on_click= lambda _: self.delete_onclick()
+                                    )
+                                ],
+                                alignment=ft.MainAxisAlignment.END
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+        self.content = self.frame
+    
+    def init_view_discountcoupon(self):
+        self.frame = ft.Container(
+            expand=True,
+            content=ft.Row(
+                [
+                    ft.Column(
+                        [
+                            ft.Card(
+                                width=500,
+                                content=ft.Container(
+                                    padding=10,
+                                    content=ft.Column(
+                                        [
+                                            ft.TextField(
+                                                label="ID Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_idCoupon,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Jenis Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=f"Kupon Diskon",
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Kode Kupon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=self.coupon.get_code,
+                                                read_only=True,
+                                            ),
+                                            ft.TextField(
+                                                label="Minimal Pembelian",
+                                                height=60,
+                                                border_radius=30,
+                                                value=f"{self.coupon.get_minBuy:,.1f}",
+                                                read_only=True,
+                                                prefix_text="Rp ",
+                                            ),
+                                            ft.TextField(
+                                                label="Persen Diskon",
+                                                height=60,
+                                                border_radius=30,
+                                                value=f"{self.coupon.get_percentage}",
+                                                read_only=True,
+                                                suffix_text="%",
+                                            ),
+                                            ft.TextField(
+                                                label="Diskon Maksimal",
+                                                height=60,
+                                                border_radius=30,
+                                                value=f"{self.coupon.get_maxDiscount:,.1f}",
+                                                read_only=True,
+                                                prefix_text="Rp "
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.CENTER,
+                                        width=300,
+                                    )
+                                )
+                            ),
+                            ft.Row(
+                                [
+                                    ft.Container(width=5),
+                                    ft.ElevatedButton(
+                                        text="Edit",
+                                        on_click= lambda _: self.edit_onclick()
+                                    ),
+                                    ft.ElevatedButton(
+                                        text="Hapus",
+                                        bgcolor=ft.colors.RED_200,
+                                        color=ft.colors.RED,
+                                        on_click= lambda _: self.delete_onclick()
+                                    )
+                                ],
+                                alignment=ft.MainAxisAlignment.END
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
+        self.content = self.frame
+    
+    def refresh_view(self):
+        if isinstance(self.coupon, FreeCoupon):
+            self.coupon = CouponController.getFreeCoupon(self.coupon.get_code)
+            self.init_view_freecoupon()
+        else:
+            self.coupon = CouponController.getDiscountCoupon(self.coupon.get_code)
+            self.init_view_discountcoupon()
+        self.update()
+    
+    def edit_onclick(self):
+        if isinstance(self.coupon, FreeCoupon):
+            FreeCouponEditor(self.page, self, self.coupon).show_editor()
+        else:
+            DiscountCouponEditor(self.page, self, self.coupon).show_editor()
+    
+    def delete_onclick(self):
+        CouponController.deleteByCode(self.coupon.get_code)
+        self.father.deselect_item()
+        self.father.update_interface()
+
+class CouponManager(ft.Container):
+
+    listCoupon : List[FreeCoupon | DiscountCoupon]
+    itemField : ft.Column
+
+    emptyBox : ft.Container
+
+    searchField : ft.Container
+
+    page : ft.Page
+
+    left : ft.Container
+    right : ft.Container
+
+    def __init__(self, page : ft.Page):
+        super().__init__()
+        self.page = page
+        self.expand = True
+        self.init_component()
+    
+    def init_itemField(self):
+        self.listCoupon = CouponController.getAll()
+        self.itemField = ft.Column(
+            [
+                CouponBox(coupon, self) for coupon in self.listCoupon
+            ],
+            expand=True,
+            scroll=ft.ScrollMode.AUTO,
+        )
+        if len(self.listCoupon) == 0:
+            self.itemField.controls = [ft.Container(
+                content=ft.Text("Tidak ada kupon", size=16),
+                padding=ft.Padding(0,40,0,0)
+            )]
+    
+    def init_component(self):
+        self.init_itemField()
+        self.emptyBox = ft.Container(
+            expand=True,
+            content=ft.Text("Tidak ada item dipilih", size=30, color=ft.colors.GREY),
+            alignment=ft.alignment.center
+        )
+        self.searchField = ft.Container(
+            content= ft.TextField(
+                label="Search",
+                height=60,
+                border_radius=30,
+                on_change= lambda e: self.onchangeSearch(e),
+            ),
+            padding=ft.Padding(50,0,50,0),
+        )
+        self.left = ft.Container(
+            expand=True,
+            content=ft.Column(
+                [
+                    ft.Container(height=10),
+                    self.searchField,
+                    ft.Row(
+                        [
+                            ft.Text("List Kupon", size=16),
+                            ft.Container(
+                                content=ft.Row(
+                                    [
+                                        ft.TextButton(
+                                            text="Kupon Diskon",
+                                            icon=ft.icons.ADD,
+                                            on_click= lambda _: self.add_discountcoupon()
+                                        ),
+                                        ft.TextButton(
+                                            text="Kupon Gratis",
+                                            icon=ft.icons.ADD,
+                                            on_click= lambda _: self.add_freecoupon()
+                                        )
+                                    ]
+                                )
+                            )
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                    ),
+                    ft.Divider(thickness=2),
+                    self.itemField,
+                ],
+            )
+        )
+        self.right = ft.Container(
+            expand=True,
+            content=self.emptyBox
+        )
+        self.content = ft.Container(
+            expand=True,
+            content=ft.Row(
+                [
+                    self.left,
+                    ft.VerticalDivider(width=1, thickness=2),
+                    self.right,
+                ]
+            )
+        )
+    
+    def onchangeSearch(self, e : ft.ControlEvent):
+        self.listCoupon = CouponController.getSomeCoupon(e.control.value)
+        children = [CouponBox(coupon, self) for coupon in self.listCoupon]
+        self.itemField.controls = children
+        if len(self.listCoupon) == 0:
+            self.itemField.controls = [ft.Container(
+                content=ft.Text("Tidak ada kupon", size=16),
+                padding=ft.Padding(0,40,0,0)
+            )]
+        self.itemField.update()
+    
+    def update_interface(self):
+        self.listCoupon = CouponController.getSomeCoupon(self.searchField.content.value)
+        children = [CouponBox(coupon, self) for coupon in self.listCoupon]
+        self.itemField.controls = children
+        if len(self.listCoupon) == 0:
+            self.itemField.controls = [ft.Container(
+                content=ft.Text("Tidak ada kupon", size=16),
+                padding=ft.Padding(0,40,0,0)
+            )]
+        self.itemField.update()
+    
+    def deselect_item(self):
+        self.right.content = self.emptyBox
+        self.right.update()
+    
+    def select_item(self, coupon : FreeCoupon | DiscountCoupon):
+        self.right.content = CouponView(coupon, self.page, self)
+        self.right.update()
+    
+    def add_freecoupon(self):
+        listGoods = GoodController.getAll()
+        if len(listGoods) == 0:
+            DialogAlert(self.page, "Tidak dapat menambah kupon gratis untuk saat ini\nSilahkan berpindah ke manajemen produk untuk menambah produk", "List Produk masih kosong")
+        FreeCouponEditor(self.page, self).show_editor()
+    
+    def add_discountcoupon(self):
+        DiscountCouponEditor(self.page, self).show_editor()
 
 class ManagementUI(ft.Container):
 
@@ -298,7 +686,7 @@ class ManagementUI(ft.Container):
     isCoupon : bool
 
     goodManager : GoodManager
-    couponManager : ft.Container
+    couponManager : CouponManager
 
     button : ft.FloatingActionButton
 
@@ -307,7 +695,7 @@ class ManagementUI(ft.Container):
         self.page = page
         self.isCoupon = False
         self.goodManager = GoodManager(self.page)
-        self.couponManager = ft.Container(expand=True)
+        self.couponManager = CouponManager(self.page)
         self.content = ft.Container(
             expand=True,
             content=self.goodManager
@@ -330,9 +718,11 @@ class ManagementUI(ft.Container):
             self.button.text = "Produk"
             self.button.update()
             self.update()
+            self.goodManager.update()
         else:
             self.isCoupon = not self.isCoupon
             self.content = self.couponManager
             self.button.text = "Kupon"
             self.button.update()
             self.update()
+            self.couponManager.update()

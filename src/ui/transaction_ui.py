@@ -9,9 +9,6 @@ from ui.alert import DialogAlert
 from models.Coupon import *
 
 class GoodBox(ft.Card):
-
-    FOR_TRANSACTION = 0
-    FOR_EDIT = 1
     
     good : Good
     addButton : ft.ElevatedButton
@@ -23,7 +20,7 @@ class GoodBox(ft.Card):
 
     transactioninf : 'TransactionInterface'
 
-    def __init__(self, good : Good, trainf : 'TransactionInterface', page : ft.Page = None, type: int = FOR_TRANSACTION, expand = False):
+    def __init__(self, good : Good, trainf : 'TransactionInterface', page : ft.Page = None, type: int = 0, expand = False):
         super().__init__(expand=expand)
         self.page = page
         self.transactioninf = trainf
@@ -67,7 +64,7 @@ class GoodBox(ft.Card):
                 ]
             )
         )
-        if type == GoodBox.FOR_TRANSACTION:
+        if type == 0:
             self.editButton.visible = False
             self.removeButton.visible = False
             if self.good.get_stock <= 0:

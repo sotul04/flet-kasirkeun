@@ -1,3 +1,4 @@
+from typing import List
 from data import cursor, commit
 from models.Coupon import FreeCoupon, DiscountCoupon
 from random import randint
@@ -143,3 +144,31 @@ class CouponController:
     def setEditedDiscountCoupon(coupon : DiscountCoupon):
         cursor.execute(f"UPDATE discount_coupon SET min_buy={coupon.get_minBuy}, percentage={coupon.get_percentage}, max_discount={coupon.get_maxDiscount} WHERE id_coupon={coupon.get_idCoupon}")
         commit()
+    
+    @staticmethod
+    def getAll() -> List[FreeCoupon | DiscountCoupon]:
+        rows = CouponController.getAllCoupon()
+        coupons = []
+        for row in rows:
+            if row[2] == "free_coupon":
+                coupons.append(CouponController.getFreeCoupon(row[1]))
+            else:
+                coupons.append(CouponController.getDiscountCoupon(row[1]))
+        return coupons
+    
+    @staticmethod
+    def getSome(likes : str) -> any:
+        result = cursor.execute(f"SELECT * FROM coupon WHERE code LIKE '%{likes}%' or type LIKE '%{likes}%'")
+        rows = result.fetchall()
+        return rows
+
+    @staticmethod
+    def getSomeCoupon(likes : str) -> List[FreeCoupon | DiscountCoupon]:
+        rows = CouponController.getSome(likes)
+        coupons = []
+        for row in rows:
+            if row[2] == "free_coupon":
+                coupons.append(CouponController.getFreeCoupon(row[1]))
+            else:
+                coupons.append(CouponController.getDiscountCoupon(row[1]))
+        return coupons

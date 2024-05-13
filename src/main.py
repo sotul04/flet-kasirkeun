@@ -50,20 +50,22 @@ class MainPage:
     
     def on_change_sideBar(self, e : ft.ControlEvent):
         if e.control.selected_index == 0:
-            print("Transaksi")
             self.rightFrame.content = self.transaction
             self.page.floating_action_button.visible = False
             self.rightFrame.update()
             self.transaction.left.update_interface()
             self.page.update()
         elif e.control.selected_index == 1:
-            print("Manajemen")
             self.page.floating_action_button.visible = True
             self.rightFrame.content = self.management
             self.rightFrame.update()
             self.page.update()
+            if self.management.isCoupon:
+                self.management.couponManager.update_interface()
+            else:
+                self.management.goodManager.update_interface()
+
         else:
-            print("Riwayat")
             self.rightFrame.content = self.history
             self.page.floating_action_button.visible = False
             self.rightFrame.update()
