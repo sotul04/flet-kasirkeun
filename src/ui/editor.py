@@ -1,9 +1,7 @@
 from typing import List
 import flet as ft
-from models.Good import Good
-from models.Coupon import DiscountCoupon, FreeCoupon
-from controller.GoodController import GoodController
-from controller.CouponController import CouponController
+from models import Good, DiscountCoupon, FreeCoupon
+from controller import GoodController, CouponController
 
 def isStringEmpty(s : str):
     return len(s)==0 or s.isspace()

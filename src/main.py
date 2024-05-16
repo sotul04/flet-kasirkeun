@@ -1,8 +1,6 @@
 import flet as ft
-from models.Good import *
-from ui.transaction_ui import TransactionUI
-from ui.history import HistoryUI
-from ui.management import ManagementUI
+from models import *
+from ui import TransactionUI, HistoryUI, ManagementUI
 import atexit
 
 class MainPage:

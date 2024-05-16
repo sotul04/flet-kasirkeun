@@ -1,6 +1,6 @@
 from typing import List
 from data import cursor, commit
-from models.Good import Good
+from models import Good
 
 GOOD_ID = 0
 GOOD_NAME = 1

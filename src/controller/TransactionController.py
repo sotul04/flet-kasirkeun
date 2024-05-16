@@ -1,6 +1,5 @@
-from models.Transaction import Transaction, Triple
-from controller.CouponController import CouponController
-from models.Good import Good
+from models import Transaction, Triple, Good
+from controller import CouponController
 from data import cursor, commit
 from typing import List
 

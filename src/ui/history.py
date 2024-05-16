@@ -1,8 +1,7 @@
 from typing import List
 import flet as ft
-from models.Transaction import Transaction, Triple
-from models.Good import Good
-from controller.TransactionController import TransactionController
+from models import Transaction, Triple, Good
+from controller import TransactionController
 
 class HistoryCard(ft.Card):
 

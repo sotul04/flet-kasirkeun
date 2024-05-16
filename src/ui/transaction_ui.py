@@ -1,12 +1,8 @@
 from typing import List
 import flet as ft
-from models.Good import Good
-from models.Transaction import Transaction, Triple
-from controller.TransactionController import TransactionController
-from controller.GoodController import GoodController
-from controller.CouponController import CouponController
-from ui.alert import DialogAlert
-from models.Coupon import *
+from controller import TransactionController, GoodController, CouponController
+from ui import DialogAlert
+from models import *
 
 class GoodBox(ft.Card):
     

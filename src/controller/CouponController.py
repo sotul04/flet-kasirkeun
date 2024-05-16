@@ -1,6 +1,6 @@
 from typing import List
 from data import cursor, commit
-from models.Coupon import FreeCoupon, DiscountCoupon
+from models import FreeCoupon, DiscountCoupon
 from random import randint
 
 COUPON_ID = 0

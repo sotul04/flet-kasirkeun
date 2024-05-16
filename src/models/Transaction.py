@@ -1,4 +1,4 @@
-import models.Good
+from models import Good 
 from typing import List
 from dataclasses import dataclass
 import copy
@@ -6,7 +6,7 @@ import copy
 @dataclass
 class Triple:
     
-    first : models.Good.Good
+    first : Good
     second : int
     third : float
 
@@ -135,7 +135,7 @@ class Transaction:
     def getItem(self, index : int):
         return self.get_items[index]
     
-    def getItemGood(self, index : int) -> models.Good.Good:
+    def getItemGood(self, index : int) -> Good:
         return self.getItem(index).get_first
 
     def getItemQuantity(self, index : int) -> int:
@@ -149,7 +149,7 @@ class Transaction:
         self.items[index] = item
         self.totalPrice += item.get_third
     
-    def getItemPosition(self, item : models.Good.Good) -> int :
+    def getItemPosition(self, item : Good) -> int :
         length = len(self.items)
         for i in range(length):
             if (self.getItemGood(i).equals(item)):
@@ -168,11 +168,11 @@ class Transaction:
             self.items[pos] = newItem
         self.totalPrice += added_price
     
-    def add(self, good : models.Good.Good, quantity : int, prices : float):
+    def add(self, good : Good, quantity : int, prices : float):
         newItem = Triple(good, quantity, prices)
         self.addItem(newItem)
     
-    def cancelOneItem(self, item : models.Good.Good) -> bool:
+    def cancelOneItem(self, item : Good) -> bool:
         pos = self.getItemPosition(item)
         if pos >= 0:
             stock = self.items[pos].get_second
