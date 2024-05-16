@@ -2,7 +2,7 @@ from typing import List
 import flet as ft
 from models import Good, FreeCoupon, DiscountCoupon
 from controller import CouponController, GoodController
-from ui import *
+from ui import GoodEditor, FreeCouponEditor, DiscountCouponEditor, DialogAlert
 
 class GoodBox(ft.Card):
     
